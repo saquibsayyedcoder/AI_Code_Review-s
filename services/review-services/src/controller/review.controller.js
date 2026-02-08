@@ -12,22 +12,26 @@ export const createReview = async (req, res) => {
     const userId = req.user.id;
 
     // Call AI service
-    const aiResponse = await getAIReview(code, language);
+   const aiResponse = await getAIReview(code, language);
 
-    const review = await prisma.review.create({
-      data: {
-        userId,
-        code,
-        language,
-        aiFeedback: aiResponse.feedback,
-        score: aiResponse.score,
-      },
-    });
+const feedback = aiResponse.feedback || "No feedback available";
+const score = aiResponse.score ?? 0;
 
-    res.status(201).json(review);
+const review = await prisma.review.create({
+  data: {
+    userId,
+    code,
+    language,
+    aiFeedback: feedback,
+    score: score,
+  },
+});
+
+
+    res.status(201).json({ success: true, review });
 
   } catch (error) {
-    console.log(error);
+    console.error("Failed to create review:", error);
     res.status(500).json({ message: "Failed to create review" });
   }
 };

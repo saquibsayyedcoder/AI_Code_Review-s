@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Review {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  code       String
-  language   String
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  code      String
+  language  String
   aiFeedback String
-  score      Int?
-  createdAt  DateTime @default(now())
+  score     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
