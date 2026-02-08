@@ -3,19 +3,21 @@ import axios from "axios";
 export const getAIReview = async (code, language) => {
   try {
     const response = await axios.post(
-      `${process.env.AI_SERVICE_URL}/api/ai/review`, // full correct endpoint
+      `${process.env.AI_SERVICE_URL}/api/ai/review`,
       { code, language }
     );
 
-    // response.data should be like: { success: true, review: "..." }
     if (!response.data || !response.data.success) {
-      throw new Error("AI service returned an invalid response");
+      throw new Error("AI service returned invalid response");
     }
 
-    return {
-      feedback: response.data.review, // <-- map to 'feedback' for review-service
-      score: 0 // AI service currently has no score, default to 0
-    };
+    // Here we map the AI review text to feedback
+    const feedback = response.data.review || "No feedback available";
+
+    // Optionally, generate a score based on feedback length or keywords
+    const score = Math.min(10, Math.floor(feedback.split(" ").length / 50)); // simple example
+
+    return { feedback, score };
 
   } catch (err) {
     console.error("AI service call failed:", err.response?.data || err.message);
