@@ -1,0 +1,9 @@
+🔐 Auth Service
+
+Register
+
+Login
+
+JWT
+
+PostgreSQL (users table)

@@ -1,0 +1,7 @@
+API Gateway
+
+Single entry point
+
+Routes requests to services
+
+Handles JWT verification

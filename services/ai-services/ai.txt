@@ -1,0 +1,7 @@
+🧠 AI Service
+
+Connects to OpenAI
+
+Handles prompts
+
+Returns structured feedback

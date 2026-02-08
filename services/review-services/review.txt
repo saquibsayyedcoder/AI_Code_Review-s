@@ -1,0 +1,7 @@
+📝 Review Service
+
+Stores code reviews
+
+Calls AI service
+
+Stores results in PostgreSQL
