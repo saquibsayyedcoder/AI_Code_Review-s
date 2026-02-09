@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/review", reviewRoutes);
+app.use("/", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.send("Review Service Running");
