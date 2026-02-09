@@ -7,6 +7,11 @@ node_modules/
 .env.local
 .env.development
 .env.production
+node_modules/
+dist/
+build/
+Dockerfile.local
+
 
 # build files
 dist/
@@ -19,3 +24,4 @@ logs
 # OS files
 .DS_Store
 Thumbs.db
+ 

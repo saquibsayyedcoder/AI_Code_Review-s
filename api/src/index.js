@@ -21,44 +21,50 @@ app.use(
 app.use(morgan("dev"));
 
 // AUTH SERVICE
+// AUTH SERVICE
 app.use(
   "/api/auth",
   createProxyMiddleware({
-    target: "http://localhost:5001",
+    target: "http://auth-services:5001",
     changeOrigin: true,
     pathRewrite: {
-      "^/api/auth": "", // remove /api/auth before forwarding
+      "^/api/auth": "",
     },
-    logLevel: "debug",     // optional, helps debug
-    proxyTimeout: 10000,   // optional, 10s for testing
   })
 );
-
-
 
 // REVIEW SERVICE
 app.use(
   "/api/review",
   createProxyMiddleware({
-    target: "http://localhost:5002",
+    target: "http://review-services:5002",
     changeOrigin: true,
+    pathRewrite: {
+      "^/api/review": "",
+    },
   })
 );
 
-// API Gateway (index.js)
-// Corrected version
+// AI SERVICE
 app.use(
   "/api/ai",
   createProxyMiddleware({
-    target: "http://localhost:5004", // AI service port
+    target: "http://ai-services:5004",
     changeOrigin: true,
-    logLevel: "debug",
-    pathRewrite: { "^/api/ai": "" }, // <-- removes /api/ai prefix before forwarding
+    pathRewrite: {
+      "^/api/ai": "",
+    },
   })
 );
 
 
 
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "API Gateway is running 🚀"
+  });
+});
 
 
 

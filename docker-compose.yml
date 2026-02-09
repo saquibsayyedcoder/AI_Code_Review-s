@@ -1,0 +1,67 @@
+services:
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - AI_SERVICE_URL=http://ai-services:5004
+    depends_on:
+      - auth-services
+      - review-services
+      - ai-services
+
+  auth-services:
+    build: ./services/auth-services
+    container_name: auth-services
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - DATABASE_URL=postgresql://postgres:new_password@db:5432/auth_db
+      - JWT_SECRET=super_key_for_jwt
+    depends_on:
+      - db
+
+  review-services:
+    build: ./services/review-services
+    container_name: review-services
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - DATABASE_URL=postgresql://postgres:new_password@db:5432/review_db
+      - JWT_SECRET=super_key_for_jwt
+    depends_on:
+      - db
+
+  ai-services:
+    build: ./services/ai-services
+    container_name: ai-services
+    ports:
+      - "5004:5004"
+    environment:
+      - PORT=5004
+      - GROQ_API_KEY=${GROQ_API_KEY}
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: new_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

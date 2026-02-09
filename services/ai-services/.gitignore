@@ -8,6 +8,11 @@ node_modules/
 .env.development
 .env.production
 
+node_modules/
+dist/
+build/
+Dockerfile.local
+
 # build files
 dist/
 build/
