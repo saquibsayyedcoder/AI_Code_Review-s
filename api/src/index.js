@@ -8,61 +8,60 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(morgan("dev")); // logging
 
-// ==========================
+// ✅ CORS
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.use(morgan("dev"));
+
 // AUTH SERVICE
-// ==========================
 app.use(
   "/api/auth",
   createProxyMiddleware({
-    target: process.env.AUTH_SERVICE_URL,
+    target: "http://localhost:5001",
     changeOrigin: true,
     pathRewrite: {
-      "^/api/auth": "/api/auth",
+      "^/api/auth": "", // remove /api/auth before forwarding
     },
+    logLevel: "debug",     // optional, helps debug
+    proxyTimeout: 10000,   // optional, 10s for testing
   })
 );
 
-// ==========================
+
+
 // REVIEW SERVICE
-// ==========================
 app.use(
   "/api/review",
   createProxyMiddleware({
-    target: process.env.REVIEW_SERVICE_URL,
+    target: "http://localhost:5002",
     changeOrigin: true,
-    pathRewrite: {
-      "^/api/review": "/api/review",
-    },
   })
 );
 
-// ==========================
-// AI SERVICE (optional)
-// ==========================
+// API Gateway (index.js)
+// Corrected version
 app.use(
   "/api/ai",
   createProxyMiddleware({
-    target: process.env.AI_SERVICE_URL,
+    target: "http://localhost:5004", // AI service port
     changeOrigin: true,
-    pathRewrite: {
-      "^/api/ai": "/api/ai",
-    },
+    logLevel: "debug",
+    pathRewrite: { "^/api/ai": "" }, // <-- removes /api/ai prefix before forwarding
   })
 );
 
-// Health check
-app.get("/", (req, res) => {
-  res.json({
-    message: "API Gateway Running 🚀",
-  });
-});
 
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 API Gateway running on port ${PORT}`);
+
+
+
+app.listen(5000, () => {
+  console.log("🚀 Gateway running on 5000");
 });
