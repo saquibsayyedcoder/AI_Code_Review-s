@@ -38,7 +38,8 @@ app.get("/", (req, res) => {
 });
 
 // API Routes
-app.use("/api/ai", aiRoutes);
+app.use("/", aiRoutes);
+
 
 // 404 Handler
 app.use((req, res) => {
